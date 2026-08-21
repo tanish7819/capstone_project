@@ -1,0 +1,12 @@
+text
+node_modules
+build
+dist
+.git
+.gitignore
+Dockerfile
+npm-debug.log
+README.md
+coverage
+.cache
+.vscode
