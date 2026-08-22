@@ -3,27 +3,35 @@ pipeline {
 
     environment {
         DOCKERHUB = "satya3318"
-        IMAGE_TAG = "latest"
+        IMAGE_TAG = "v${BUILD_NUMBER}"
     }
 
     stages {
 
         stage('Clone Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/satya3318/capstoneproject.git'
+                git branch: 'main',
+                    url: 'https://github.com/satya3318/capstoneproject.git'
             }
         }
-stage('Docker Login') {
-    steps {
-        script {
-            withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-                sh '''
-                echo "$PASS" | docker login -u "$USER" --password-stdin
-                '''
+
+        stage('Docker Login') {
+            steps {
+                script {
+                    withCredentials([
+                        usernamePassword(
+                            credentialsId: 'dockerhub',
+                            usernameVariable: 'USER',
+                            passwordVariable: 'PASS'
+                        )
+                    ]) {
+                        sh '''
+                        echo "$PASS" | docker login -u "$USER" --password-stdin
+                        '''
+                    }
+                }
             }
         }
-    }
-}
 
         stage('Build Docker Images') {
             steps {
@@ -34,7 +42,6 @@ stage('Docker Login') {
                 docker build -t $DOCKERHUB/inventory:$IMAGE_TAG ./inventory-service
                 docker build -t $DOCKERHUB/mysql:$IMAGE_TAG ./mysql
 
-                # also tag each image as latest for rollback convenience
                 docker tag $DOCKERHUB/frontend:$IMAGE_TAG $DOCKERHUB/frontend:latest
                 docker tag $DOCKERHUB/product:$IMAGE_TAG $DOCKERHUB/product:latest
                 docker tag $DOCKERHUB/order:$IMAGE_TAG $DOCKERHUB/order:latest
@@ -44,29 +51,39 @@ stage('Docker Login') {
             }
         }
 
-stage('Push Images') {
-    steps {
-        script {
-            withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-                sh '''
-                docker logout || true
-                echo "$PASS" | docker login -u "$USER" --password-stdin
+        stage('Push Images') {
+            steps {
+                script {
+                    withCredentials([
+                        usernamePassword(
+                            credentialsId: 'dockerhub',
+                            usernameVariable: 'USER',
+                            passwordVariable: 'PASS'
+                        )
+                    ]) {
+                        sh '''
+                        echo "$PASS" | docker login -u "$USER" --password-stdin
 
-                docker push $DOCKERHUB/frontend:$IMAGE_TAG
-                docker push $DOCKERHUB/product:$IMAGE_TAG
-                docker push $DOCKERHUB/order:$IMAGE_TAG
-                docker push $DOCKERHUB/inventory:$IMAGE_TAG
-                docker push $DOCKERHUB/mysql:$IMAGE_TAG
-                '''
+                        docker push $DOCKERHUB/frontend:$IMAGE_TAG
+                        docker push $DOCKERHUB/product:$IMAGE_TAG
+                        docker push $DOCKERHUB/order:$IMAGE_TAG
+                        docker push $DOCKERHUB/inventory:$IMAGE_TAG
+                        docker push $DOCKERHUB/mysql:$IMAGE_TAG
+
+                        docker push $DOCKERHUB/frontend:latest
+                        docker push $DOCKERHUB/product:latest
+                        docker push $DOCKERHUB/order:latest
+                        docker push $DOCKERHUB/inventory:latest
+                        docker push $DOCKERHUB/mysql:latest
+                        '''
+                    }
+                }
             }
         }
-    }
-}
 
         stage('Deploy to Kubernetes') {
             steps {
                 sh '''
-                # replace IMAGE_TAG placeholder in manifests
                 sed -i "s|IMAGE_TAG|$IMAGE_TAG|g" k8s/*.yaml
 
                 kubectl apply --validate=false -f k8s/
@@ -75,4 +92,3 @@ stage('Push Images') {
         }
     }
 }
-
