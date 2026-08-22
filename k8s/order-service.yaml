@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: order-service
-        image: satya3318/order:v1
+        image: satya3318/order:IMAGE_TAG
         ports:
         - containerPort: 5001
 ---

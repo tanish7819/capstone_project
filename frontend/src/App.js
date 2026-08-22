@@ -11,6 +11,9 @@ function App() {
   const [stock, setStock] = useState("");
   const [updateStock, setUpdateStock] = useState("");
 
+  // Quantity selected for each product
+  const [quantities, setQuantities] = useState({});
+
   // Kubernetes NodePort URLs
   const PRODUCT_URL = "http://23.251.151.173:30500";
   const ORDER_URL = "http://23.251.151.173:30501";
@@ -72,18 +75,52 @@ function App() {
     }
   };
 
+  // Change quantity for a product
+  const changeQuantity = (id, value) => {
+    setQuantities({
+      ...quantities,
+      [id]: value,
+    });
+  };
+
   // Create Order
   const createOrder = async (id) => {
     try {
-      await axios.post(`${ORDER_URL}/orders`, {
+      const quantity = Number(quantities[id]) || 1;
+
+      if (quantity <= 0) {
+        alert("Quantity must be greater than 0");
+        return;
+      }
+
+      const res = await axios.post(`${ORDER_URL}/orders`, {
         product_id: id,
-        quantity: 1,
+        quantity: quantity,
       });
 
+      alert(
+        `Order created successfully. Remaining stock: ${res.data.remainingStock}`
+      );
+
+      // Reset quantity
+      setQuantities({
+        ...quantities,
+        [id]: 1,
+      });
+
+      // Reload all data
+      loadProducts();
       loadOrders();
       loadInventory();
+
     } catch (err) {
       console.error("Error creating order:", err);
+
+      if (err.response && err.response.data) {
+        alert(err.response.data.error || "Failed to create order");
+      } else {
+        alert("Failed to create order");
+      }
     }
   };
 
@@ -136,9 +173,23 @@ function App() {
           <li key={p.id}>
             {p.name} ₹{p.price} stock:{p.stock}
 
+            {" "}
+
+            <input
+              type="number"
+              min="1"
+              value={quantities[p.id] || 1}
+              onChange={(e) =>
+                changeQuantity(p.id, e.target.value)
+              }
+              style={{ width: "60px" }}
+            />
+
             <button onClick={() => createOrder(p.id)}>
               Order
             </button>
+
+            {" "}
 
             <input
               placeholder="new stock"
