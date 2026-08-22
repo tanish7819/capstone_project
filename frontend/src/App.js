@@ -12,9 +12,9 @@ function App() {
   const [updateStock, setUpdateStock] = useState("");
 
   // Kubernetes NodePort URLs
-  const PRODUCT_URL = "http://192.168.49.2:30500";
-  const ORDER_URL = "http://192.168.49.2:30501";
-  const INVENTORY_URL = "http://192.168.49.2:30502";
+  const PRODUCT_URL = "http://23.251.151.173:30500";
+  const ORDER_URL = "http://23.251.151.173:30501";
+  const INVENTORY_URL = "http://23.251.151.173:30502";
 
   // Load Products
   const loadProducts = async () => {
