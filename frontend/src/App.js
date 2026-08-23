@@ -140,6 +140,32 @@ function App() {
     }
   };
 
+// Delete Product
+const deleteProduct = async (id) => {
+  if (!window.confirm("Are you sure you want to delete this product?")) {
+    return;
+  }
+
+  try {
+    await axios.delete(`${PRODUCT_URL}/products/${id}`);
+
+    alert("Product and inventory deleted successfully");
+
+    // Refresh all data
+    loadProducts();
+    loadInventory();
+    loadOrders();
+  } catch (err) {
+    console.error("Error deleting product:", err);
+
+    if (err.response && err.response.data) {
+      alert(err.response.data.error || "Failed to delete product");
+    } else {
+      alert("Failed to delete product");
+    }
+  }
+};
+
   return (
     <div style={{ padding: 40 }}>
       <h2>Ecommerce Platform</h2>
@@ -198,6 +224,9 @@ function App() {
 
             <button onClick={() => updateInventory(p.id)}>
               Update Stock
+            </button>
+	    <button onClick={() => deleteProduct(p.id)}>
+              Delete
             </button>
           </li>
         ))}
