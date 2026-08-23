@@ -168,7 +168,7 @@ const deleteProduct = async (id) => {
 
   return (
     <div style={{ padding: 40 }}>
-      <h2>Ecommerce Platform</h2>
+      <h2>Ecommerce Platform - v1.1</h2>
 
       <h3>Add Product</h3>
 
