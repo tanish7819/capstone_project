@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: satya3318/frontend:IMAGE_TAG
+        image: tanish190/frontend:IMAGE_TAG
         ports:
         - containerPort: 80
 

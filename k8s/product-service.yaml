@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: product-service
-        image: satya3318/product:IMAGE_TAG   # <-- use your product-service image
+        image: tanish190/product:IMAGE_TAG   # <-- use your product-service image
         ports:
         - containerPort: 5000
 ---

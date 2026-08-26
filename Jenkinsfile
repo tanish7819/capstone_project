@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB = "satya3318"
+        DOCKERHUB = "tanish190"
         IMAGE_TAG = "v${BUILD_NUMBER}"
     }
 
@@ -11,7 +11,7 @@ pipeline {
         stage('Clone Code') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/satya3318/capstoneproject.git'
+                    url: 'https://github.com/tanish7819/capstone_project.git'
             }
         }
 
