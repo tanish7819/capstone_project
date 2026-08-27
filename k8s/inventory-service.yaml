@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: inventory-service
-        image: tanish190/inventory:v1
+        image: tanish190/inventory:IMAGE_TAG
         ports:
         - containerPort: 5002
 ---

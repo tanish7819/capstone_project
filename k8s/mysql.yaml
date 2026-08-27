@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: mysql
-        image: tanish190/mysql:v1
+        image: tanish190/mysql:IMAGE_TAG
         env:
         - name: MYSQL_ROOT_PASSWORD
           value: "password"
