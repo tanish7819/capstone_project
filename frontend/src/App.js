@@ -151,7 +151,21 @@ const deleteProduct = async (id) => {
 
     alert("Product and inventory deleted successfully");
 
-    // Delete Order
+    loadProducts();
+    loadInventory();
+    loadOrders();
+  } catch (err) {
+    console.error("Error deleting product:", err);
+
+    if (err.response && err.response.data) {
+      alert(err.response.data.error || "Failed to delete product");
+    } else {
+      alert("Failed to delete product");
+    }
+  }
+};
+
+// Delete Order
 const deleteOrder = async (id) => {
   if (!window.confirm("Are you sure you want to delete this order?")) {
     return;
@@ -255,57 +269,21 @@ const deleteOrder = async (id) => {
         ))}
       </ul>
 
-      <h3>Orders</h3>
+   <h3>Orders</h3>
 
-<div>
+<ul>
   {orders.map((o) => (
-    <div
-      key={o.id}
-      style={{
-        border: "1px solid #ddd",
-        borderRadius: "10px",
-        padding: "20px",
-        marginBottom: "15px",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        backgroundColor: "#fff",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.08)"
-      }}
-    >
-      <div>
-        <h4>Order #{o.id}</h4>
+    <li key={o.id}>
+      Order #{o.id} product:{o.product_id} qty:{o.quantity}
 
-        <p>
-          <strong>Product ID:</strong> {o.product_id}
-        </p>
+      {" "}
 
-        <p>
-          <strong>Quantity:</strong> {o.quantity}
-        </p>
-
-        <p>
-          <strong>Status:</strong> {o.status}
-        </p>
-      </div>
-
-      <button
-        onClick={() => deleteOrder(o.id)}
-        style={{
-          backgroundColor: "#dc3545",
-          color: "white",
-          border: "none",
-          padding: "10px 18px",
-          borderRadius: "6px",
-          cursor: "pointer",
-          fontWeight: "bold"
-        }}
-      >
+      <button onClick={() => deleteOrder(o.id)}>
         Delete
       </button>
-    </div>
+    </li>
   ))}
-</div>
+</ul>
 
       <h3>Inventory</h3>
 
