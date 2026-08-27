@@ -16,8 +16,8 @@ function App() {
 
   // Kubernetes NodePort URLs
   const PRODUCT_URL = "http://34.131.106.198:30500";
-  const ORDER_URL = "http://34.131.106.198/:30501";
-  const INVENTORY_URL = "http://34.131.106.198/:30502";
+  const ORDER_URL = "http://34.131.106.198:30501";
+  const INVENTORY_URL = "http://34.131.106.198:30502";
 
   // Load Products
   const loadProducts = async () => {
