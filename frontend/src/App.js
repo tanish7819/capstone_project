@@ -188,20 +188,6 @@ const deleteOrder = async (id) => {
   }
 };
 
-    // Refresh all data
-    loadProducts();
-    loadInventory();
-    loadOrders();
-  } catch (err) {
-    console.error("Error deleting product:", err);
-
-    if (err.response && err.response.data) {
-      alert(err.response.data.error || "Failed to delete product");
-    } else {
-      alert("Failed to delete product");
-    }
-  }
-};
 
   return (
     <div style={{ padding: 40 }}>
