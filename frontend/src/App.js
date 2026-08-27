@@ -15,7 +15,7 @@ function App() {
   const [quantities, setQuantities] = useState({});
 
   // Kubernetes NodePort URLs
-  const PRODUCT_URL = "http://35.225.111.151:30500";
+  const PRODUCT_URL = "34.131.106.198";
   const ORDER_URL = "http://35.225.111.151:30501";
   const INVENTORY_URL = "http://35.225.111.151:30502";
 
