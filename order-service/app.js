@@ -130,4 +130,33 @@ app.post("/orders",(req,res)=>{
  })
 })
 
+// Delete Order
+app.delete("/orders/:id",(req,res)=>{
+  const orderId = req.params.id
+
+  db.query(
+    "DELETE FROM orders WHERE id=?",
+    [orderId],
+    (err,result)=>{
+      if(err){
+        console.error(err)
+        return res.status(500).json({
+          error:"Failed to delete order"
+        })
+      }
+
+      if(result.affectedRows === 0){
+        return res.status(404).json({
+          error:"Order not found"
+        })
+      }
+
+      res.json({
+        message:"Order deleted successfully",
+        orderId:orderId
+      })
+    }
+  )
+})
+
 app.listen(5001,()=>console.log("order service running"))

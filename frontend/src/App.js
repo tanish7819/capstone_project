@@ -151,6 +151,29 @@ const deleteProduct = async (id) => {
 
     alert("Product and inventory deleted successfully");
 
+    // Delete Order
+const deleteOrder = async (id) => {
+  if (!window.confirm("Are you sure you want to delete this order?")) {
+    return;
+  }
+
+  try {
+    await axios.delete(`${ORDER_URL}/orders/${id}`);
+
+    alert("Order deleted successfully");
+
+    loadOrders();
+  } catch (err) {
+    console.error("Error deleting order:", err);
+
+    if (err.response && err.response.data) {
+      alert(err.response.data.error || "Failed to delete order");
+    } else {
+      alert("Failed to delete order");
+    }
+  }
+};
+
     // Refresh all data
     loadProducts();
     loadInventory();
@@ -234,13 +257,55 @@ const deleteProduct = async (id) => {
 
       <h3>Orders</h3>
 
-      <ul>
-        {orders.map((o) => (
-          <li key={o.id}>
-            Order #{o.id} product:{o.product_id} qty:{o.quantity}
-          </li>
-        ))}
-      </ul>
+<div>
+  {orders.map((o) => (
+    <div
+      key={o.id}
+      style={{
+        border: "1px solid #ddd",
+        borderRadius: "10px",
+        padding: "20px",
+        marginBottom: "15px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        backgroundColor: "#fff",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.08)"
+      }}
+    >
+      <div>
+        <h4>Order #{o.id}</h4>
+
+        <p>
+          <strong>Product ID:</strong> {o.product_id}
+        </p>
+
+        <p>
+          <strong>Quantity:</strong> {o.quantity}
+        </p>
+
+        <p>
+          <strong>Status:</strong> {o.status}
+        </p>
+      </div>
+
+      <button
+        onClick={() => deleteOrder(o.id)}
+        style={{
+          backgroundColor: "#dc3545",
+          color: "white",
+          border: "none",
+          padding: "10px 18px",
+          borderRadius: "6px",
+          cursor: "pointer",
+          fontWeight: "bold"
+        }}
+      >
+        Delete
+      </button>
+    </div>
+  ))}
+</div>
 
       <h3>Inventory</h3>
 
