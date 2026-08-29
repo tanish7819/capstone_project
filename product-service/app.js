@@ -49,7 +49,9 @@ app.post("/products", (req, res) => {
             return connection.rollback(() => {
               connection.release()
               console.error(err)
-              res.status(500).json({ error: "Failed to create product" })
+              res.status(500).json({
+                error: "Failed to create product"
+              })
             })
           }
 
