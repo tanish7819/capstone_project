@@ -14,7 +14,6 @@ const db = mysql.createPool({
   database: "ecommerce"
 })
 
-// Get all products
 app.get("/products", (req, res) => {
   db.query("SELECT * FROM products", (err, result) => {
     if (err) {
@@ -26,25 +25,20 @@ app.get("/products", (req, res) => {
   })
 })
 
-// Add product
 app.post("/products", (req, res) => {
   const { name, price, stock } = req.body
 
   db.getConnection((err, connection) => {
     if (err) {
       console.error(err)
-      return res.status(500).json({
-        error: "Database connection failed"
-      })
+      return res.status(500).json({ error: "Database connection failed" })
     }
 
     connection.beginTransaction((err) => {
       if (err) {
         connection.release()
         console.error(err)
-        return res.status(500).json({
-          error: "Transaction failed"
-        })
+        return res.status(500).json({ error: "Transaction failed" })
       }
 
       connection.query(
@@ -91,7 +85,7 @@ app.post("/products", (req, res) => {
                 connection.release()
 
                 res.json({
-                  message: "Product created successfully",
+                  message: "product created",
                   productId: productId
                 })
               })
@@ -103,7 +97,6 @@ app.post("/products", (req, res) => {
   })
 })
 
-// Delete product
 app.delete("/products/:id", (req, res) => {
   const productId = req.params.id
 
@@ -124,7 +117,6 @@ app.delete("/products/:id", (req, res) => {
         })
       }
 
-      // Delete inventory first
       connection.query(
         "DELETE FROM inventory WHERE product_id=?",
         [productId],
@@ -139,7 +131,6 @@ app.delete("/products/:id", (req, res) => {
             })
           }
 
-          // Delete product
           connection.query(
             "DELETE FROM products WHERE id=?",
             [productId],
@@ -177,7 +168,7 @@ app.delete("/products/:id", (req, res) => {
                 connection.release()
 
                 res.json({
-                  message: "Product and inventory deleted successfully",
+                  message: "Product and inventory deleted",
                   productId: productId
                 })
               })
@@ -191,4 +182,4 @@ app.delete("/products/:id", (req, res) => {
 
 app.listen(5000, () => {
   console.log("product service running")
-})
+}) 
