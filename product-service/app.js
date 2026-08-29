@@ -49,9 +49,7 @@ app.post("/products", (req, res) => {
             return connection.rollback(() => {
               connection.release()
               console.error(err)
-              res.status(500).json({
-                error: "Failed to create product"
-              })
+              res.status(500).json({ error: "Failed to create product" })
             })
           }
 
@@ -182,4 +180,4 @@ app.delete("/products/:id", (req, res) => {
 
 app.listen(5000, () => {
   console.log("product service running")
-}) 
+})
